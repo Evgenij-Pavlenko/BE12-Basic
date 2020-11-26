@@ -12,6 +12,7 @@ import java.util.stream.Stream;
  */
 public class FindPair {
 
+
     public int findPair(List<Integer> listInt) {
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         for (int i : listInt) {
@@ -19,6 +20,7 @@ public class FindPair {
             map.putIfAbsent(i, 1);
         }
         System.out.println(map);
+
 
         // O(sqr(n))
         int ret = map.entrySet().stream().filter(m -> m.getValue() % 2 != 0).map(Map.Entry::getKey).findFirst().get();
