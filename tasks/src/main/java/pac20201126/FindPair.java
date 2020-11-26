@@ -22,7 +22,7 @@ public class FindPair {
         System.out.println(map);
 
 
-        // O(sqr(n))
+        // O(n + m) => O(2n)
         int ret = map.entrySet().stream().filter(m -> m.getValue() % 2 != 0).map(Map.Entry::getKey).findFirst().get();
         return ret;
     }
