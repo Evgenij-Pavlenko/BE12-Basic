@@ -15,7 +15,7 @@ public class MultiplicationN {
         Deque<Integer> deq = new LinkedList<>(list);
         System.out.println(deq);
 
-        // O(n) or O(sqr(n)/2)
+        // O(n) or O((n)/2)
         while (deq.size() != 0) {
             if (deq.contains(n/ deq.pollFirst())) {
                 return true;

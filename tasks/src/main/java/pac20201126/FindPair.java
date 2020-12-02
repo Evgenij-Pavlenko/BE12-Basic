@@ -14,15 +14,13 @@ public class FindPair {
 
 
     public int findPair(List<Integer> listInt) {
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i : listInt) {
             map.computeIfPresent(i, (k, v) -> v + 1);
             map.putIfAbsent(i, 1);
         }
-        System.out.println(map);
 
-
-        // O(n + m) => O(2n)
+        // O(n+k)
         int ret = map.entrySet().stream().filter(m -> m.getValue() % 2 != 0).map(Map.Entry::getKey).findFirst().get();
         return ret;
     }
