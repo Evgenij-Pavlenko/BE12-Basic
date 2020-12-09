@@ -1,5 +1,6 @@
 package pac20201126;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 public class MultiplicationN {
 
     public boolean decomposedN(List<Integer> list, int n) {
-        Deque<Integer> deq = new LinkedList<>(list);
+//        Deque<Integer> deq = new LinkedList<>(list);
+        Deque<Integer> deq = new ArrayDeque<>(list);
         System.out.println(deq);
 
         // O(n) or O((n)/2)
@@ -25,13 +27,14 @@ public class MultiplicationN {
 
         // algorithm 2
         while (deq.size() > 1 ) {
-            if (deq.getFirst()*deq.getLast() == n) {
+            int mult = deq.getFirst()*deq.getLast();
+            if ( mult == n) {
                 return true;
             }
-            if (deq.getFirst() * deq.getLast() > n) {
-                deq.pollLast();
+            if (mult > n) {
+                deq.removeLast();
             } else {
-                deq.pollFirst();
+                deq.removeFirst();
             }
         }
         return false;
