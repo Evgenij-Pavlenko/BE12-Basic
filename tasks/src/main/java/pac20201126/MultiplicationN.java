@@ -16,9 +16,22 @@ public class MultiplicationN {
         System.out.println(deq);
 
         // O(n) or O((n)/2)
-        while (deq.size() != 0) {
-            if (deq.contains(n/ deq.pollFirst())) {
+        // algorithm 1
+//        while (deq.size() != 0) {
+//            if (deq.contains(n/ deq.pollFirst())) {
+//                return true;
+//            }
+//        }
+
+        // algorithm 2
+        while (deq.size() > 1 ) {
+            if (deq.getFirst()*deq.getLast() == n) {
                 return true;
+            }
+            if (deq.getFirst() * deq.getLast() > n) {
+                deq.pollLast();
+            } else {
+                deq.pollFirst();
             }
         }
         return false;
