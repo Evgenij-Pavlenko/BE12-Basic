@@ -14,7 +14,7 @@ import java.util.List;
 public class SortedListAndCut {
 
     public int maxCoveredPoint(List<Integer> numbers, int cut){
-        ArrayList<Integer> listInt = (ArrayList<Integer>) numbers;
+        List<Integer> listInt = new ArrayList<>(numbers);
         int maxCount = 0;
         int count;
         for (int i = 0; i < numbers.size(); i++) {
