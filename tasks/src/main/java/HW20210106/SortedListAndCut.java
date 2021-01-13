@@ -1,6 +1,7 @@
 package HW20210106;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,13 +14,13 @@ import java.util.List;
 public class SortedListAndCut {
 
     public int maxCoveredPoint(List<Integer> numbers, int cut){
-        List<Integer> listInt = numbers;
+        ArrayList<Integer> listInt = (ArrayList<Integer>) numbers;
         int maxCount = 0;
         int count;
-        for (int i = 0; i < numbers.size()-cut; i++) {
+        for (int i = 0; i < numbers.size(); i++) {
             count = 0;
             for (int j = i; j < numbers.size(); j++) {
-                if (listInt.get(j)<listInt.get(i)+cut){
+                if (listInt.get(j)<=listInt.get(i)+cut){
                     count++;
                 }
                 if (count>maxCount){

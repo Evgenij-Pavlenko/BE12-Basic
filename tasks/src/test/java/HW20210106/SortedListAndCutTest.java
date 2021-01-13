@@ -27,4 +27,12 @@ class SortedListAndCutTest {
         int expected = 1;
         assertEquals(expected, actual);
     }
+    @Test
+    public void maxCoveredPoint_cut_1(){
+        List<Integer> numbers = Arrays.asList(10,15,20,31,40,55,58,64);
+        int cut = 9;
+        int actual = sortedList.maxCoveredPoint(numbers, cut);
+        int expected = 3;
+        assertEquals(expected, actual);
+    }
 }
