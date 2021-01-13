@@ -23,9 +23,9 @@ public class SortedListAndCut {
                 if (listInt.get(j)<=listInt.get(i)+cut){
                     count++;
                 }
-                if (count>maxCount){
-                    maxCount = count;
-                }
+            }
+            if (count>maxCount){
+                maxCount = count;
             }
         }
         return maxCount;
