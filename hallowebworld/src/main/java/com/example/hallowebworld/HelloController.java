@@ -32,7 +32,7 @@ public class HelloController {
         return incomingDate;
     }
 
-    @PutMapping("/hello-json/{name}")
+    @PutMapping("/hello-json")
     @ResponseBody
     public JsonName updateName(@PathVariable String name, @RequestBody JsonName jsonName) {
         return jsonName;
