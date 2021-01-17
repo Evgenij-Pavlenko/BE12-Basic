@@ -1,37 +1,49 @@
 package com.pavlenko.contacts.repository;
 
 import com.pavlenko.contacts.model.Contact;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.*;
+import java.util.stream.Collectors;
 
-// TODO implement the class via what ever you want, eg. HashMap or ArrayList under the nood
 // And make test
 @Repository
-public class InMemoryContactRepo implements IContactRepo{
+public class InMemoryContactRepo implements IContactRepo {
 
-//    HashMap<Integer, Contact> source;
-//    ArrayList<Contact> source;
+    Map<Integer,Contact> source;
 
-    @Override
-    public void save(Contact contact) {
-
-    }
-
-    @Override
-    public Contact find(int id) {
-        return null;
-    }
-
-    @Override
-    public Contact remove(int id) {
-        return null;
+    public InMemoryContactRepo(Map<Integer, Contact> source) {
+        this.source = source;
     }
 
     @Override
     public List<Contact> findAll() {
-        return null;
+        return new ArrayList<>(source.values());
+    }
+
+    @Override
+    public Contact find(int id) {
+        return source.get(id);
+    }
+
+    @Override
+    public void save(Contact contact) {
+        int lastKey = source.keySet().stream().mapToInt(v -> v).max().getAsInt()+1;
+        if (contact.getId()==0){
+            contact.setId(lastKey);
+            source.put(lastKey, contact);
+        } else{
+            source.computeIfPresent(contact.getId(), (k,v) -> v=contact);
+        }
+
+    }
+
+    @Override
+    public Contact remove(int id) {
+        Contact contact = find(id);
+        source.remove(id);
+        return contact;
     }
 }

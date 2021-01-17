@@ -1,5 +1,7 @@
 package com.pavlenko.contacts.model;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 public class Contact {
     private int id;
     private String name;
@@ -11,6 +13,9 @@ public class Contact {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+    }
+
+    public Contact() {
     }
 
     public int getId() {
@@ -29,5 +34,7 @@ public class Contact {
         return age;
     }
 
-
+    public void setId(int id) {
+        this.id = id;
+    }
 }
