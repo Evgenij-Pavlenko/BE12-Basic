@@ -30,12 +30,13 @@ public class InMemoryContactRepo implements IContactRepo {
 
     @Override
     public void save(Contact contact) {
-        int lastKey = source.keySet().stream().mapToInt(v -> v).max().getAsInt()+1;
+        int lastKey = source.keySet().stream().mapToInt(v -> v).max().getAsInt();
+        lastKey++;
         if (contact.getId()==0){
             contact.setId(lastKey);
             source.put(lastKey, contact);
         } else{
-            source.computeIfPresent(contact.getId(), (k,v) -> v=contact);
+            source.put(contact.getId(),contact);
         }
 
     }
