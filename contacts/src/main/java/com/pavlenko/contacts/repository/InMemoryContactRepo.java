@@ -12,14 +12,9 @@ import java.util.stream.Collectors;
 @Repository
 public class InMemoryContactRepo implements IContactRepo {
 
-    Map<Integer, Contact> source;
+    private Map<Integer, Contact> source = new HashMap<>();
 
-    @Autowired
-    public InMemoryContactRepo(Map<Integer, Contact> source) {
-        this.source = source;
-    }
-
-    @PostConstruct
+     @PostConstruct
     private void loadData(){
         source.put(1, new Contact(1, "Ivan", "Ivanov", 20));
         source.put(2, new Contact(2, "Petr", "Petrov", 40));
