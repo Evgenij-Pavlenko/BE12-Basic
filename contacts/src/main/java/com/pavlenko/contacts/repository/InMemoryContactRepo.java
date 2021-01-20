@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class InMemoryContactRepo implements IContactRepo {
 
     private Map<Integer, Contact> source = new HashMap<>();
+    private int lastUsedId = source.size()+1;
 
     @PostConstruct
     private void loadData() {
@@ -33,21 +34,21 @@ public class InMemoryContactRepo implements IContactRepo {
 
     @Override
     public void save(Contact contact) {
+        int id = contact.getId();
         int lastKey = source.keySet().stream().mapToInt(v -> v).max().getAsInt();
         lastKey++;
-        if (contact.getId() == 0) {
-            contact.setId(lastKey);
-            source.put(lastKey, contact);
+        if (id == 0) {
+            contact.setId(++lastUsedId);
+            source.put(lastUsedId, contact);
+        } else if (source.containsKey(id)) {
+            source.put(id, contact);
         } else {
-            source.put(contact.getId(), contact);
+            throw new ContactNotFoundExeption();
         }
-
     }
 
     @Override
     public Contact remove(int id) {
-        Contact contact = find(id);
-        source.remove(id);
-        return contact;
+        return source.remove(id);
     }
 }

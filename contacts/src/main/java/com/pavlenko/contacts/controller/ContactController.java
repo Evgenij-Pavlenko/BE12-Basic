@@ -32,21 +32,30 @@ public class ContactController {
         return "contacts";
     }
 
-    @PostMapping("/contacts")
-    public String saveContact(@ModelAttribute("contact") Contact contact) {
-        contactService.create(contact);
-        return "contacts";
-    }
-
     @PutMapping("/contacts")
     public String editContact(@ModelAttribute("contact") Contact contact) {
         contactService.edit(contact);
         return "contacts";
     }
 
-    @DeleteMapping("/contacts/{id}")
+    @DeleteMapping("/contacts/{id}/delete")
     public String deleteContact(@PathVariable int id) {
         contactService.remove(id);
-        return "redirect:/contacts/list";
+        return "contacts";
     }
+
+    @GetMapping("contacts/add")
+    public String addContactForm(Model model) {
+        model.addAttribute("contact", new Contact());
+        return "contact-form";
+
+    }
+
+    @PostMapping("contact/save")
+    public String saveContact(@ModelAttribute Contact contact) {
+        contactService.create(contact);
+        return "redirect:/contacts";
+
+    }
+
 }
