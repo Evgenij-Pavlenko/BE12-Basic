@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class InMemoryContactRepo implements IContactRepo {
 
     private Map<Integer, Contact> source = new HashMap<>();
-    private int lastUsedId = source.size()+1;
+    private int lastUsedId;
 
     @PostConstruct
     private void loadData() {
@@ -35,15 +36,14 @@ public class InMemoryContactRepo implements IContactRepo {
     @Override
     public void save(Contact contact) {
         int id = contact.getId();
-        int lastKey = source.keySet().stream().mapToInt(v -> v).max().getAsInt();
-        lastKey++;
+        lastUsedId = source.size();
         if (id == 0) {
             contact.setId(++lastUsedId);
             source.put(lastUsedId, contact);
         } else if (source.containsKey(id)) {
             source.put(id, contact);
         } else {
-            throw new ContactNotFoundExeption();
+            throw new ContactNotFoundException();
         }
     }
 

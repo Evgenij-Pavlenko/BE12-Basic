@@ -18,30 +18,31 @@ public class ContactController {
         this.contactService = contactService;
     }
 
-    @GetMapping("/contacts")
+    @GetMapping("contacts")
     public String getAll(Model model) {
         List<Contact> contacts = contactService.getAll();
         model.addAttribute("contactsList", contacts);
         return "contacts";
     }
 
-    @GetMapping("/contacts/{id}")
+    @GetMapping("contacts/{id}")
     public String getContact(@PathVariable int id, Model model) {
         Contact contact = contactService.get(id);
         model.addAttribute("contactsList", contact);
         return "contacts";
     }
 
-    @PutMapping("/contacts")
-    public String editContact(@ModelAttribute("contact") Contact contact) {
-        contactService.edit(contact);
-        return "contacts";
+    @GetMapping("contacts/{id}/edit")
+    public String editContactForm(@PathVariable int id, Model model) {
+        Contact theContact = contactService.get(id);
+        model.addAttribute("contact", theContact);
+        return "contact-form";
     }
 
-    @DeleteMapping("/contacts/{id}/delete")
+    @GetMapping("contacts/{id}/delete")
     public String deleteContact(@PathVariable int id) {
         contactService.remove(id);
-        return "contacts";
+        return "redirect:/contacts";
     }
 
     @GetMapping("contacts/add")

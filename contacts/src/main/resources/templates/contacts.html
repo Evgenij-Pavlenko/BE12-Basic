@@ -25,8 +25,9 @@
                 </li>
                 <li th:each="contact: ${contactsList}" class="collection-item">
                     <div><span th:text="${contact.name} + ' ' + ${contact.lastName}"></span>
-                        <a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a>
-                        <a href="#!" class="secondary-content"><i class="material-icons blue-text">edit</i></a>
+                        <a th:href="'contacts/' + ${contact.id} + '/delete'" class="secondary-content"><i
+                                class="material-icons red-text">delete</i></a>
+                        <a th:href="'contacts/' + ${contact.id} + '/edit'" class="secondary-content"><i class="material-icons blue-text">edit</i></a>
                     </div>
                 </li>
             </ul>
