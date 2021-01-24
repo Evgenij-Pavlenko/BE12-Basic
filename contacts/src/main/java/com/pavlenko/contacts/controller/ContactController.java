@@ -28,8 +28,8 @@ public class ContactController {
     @GetMapping("contacts/{id}")
     public String getContact(@PathVariable int id, Model model) {
         Contact contact = contactService.get(id);
-        model.addAttribute("contactsList", contact);
-        return "contacts";
+        model.addAttribute("contact", contact);
+        return "contact";
     }
 
     @GetMapping("contacts/{id}/edit")
@@ -54,9 +54,16 @@ public class ContactController {
 
     @PostMapping("contact/save")
     public String saveContact(@ModelAttribute Contact contact) {
-        contactService.create(contact);
+        if (contact.getId() > 0)
+            contactService.edit(contact);
+        else
+            contactService.create(contact);
         return "redirect:/contacts";
+    }
 
+    @GetMapping("")
+    public String home(){
+        return "redirect:/contacts";
     }
 
 }

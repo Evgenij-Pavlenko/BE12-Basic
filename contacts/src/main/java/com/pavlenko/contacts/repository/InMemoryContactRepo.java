@@ -21,6 +21,7 @@ public class InMemoryContactRepo implements IContactRepo {
         source.put(1, new Contact(1, "Ivan", "Ivanov", 20));
         source.put(2, new Contact(2, "Petr", "Petrov", 40));
         source.put(3, new Contact(3, "John", "Jonson", 30));
+        lastUsedId = source.size();
     }
 
     @Override
@@ -36,7 +37,6 @@ public class InMemoryContactRepo implements IContactRepo {
     @Override
     public void save(Contact contact) {
         int id = contact.getId();
-        lastUsedId = source.size();
         if (id == 0) {
             contact.setId(++lastUsedId);
             source.put(lastUsedId, contact);
