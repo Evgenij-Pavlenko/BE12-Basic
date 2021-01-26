@@ -20,10 +20,22 @@ public class PrimeNumber {
         return ret;
     }
 
-    private boolean isPrime(int i) {
-        int sqr = i/2;
-        for (int j = 2; j <= sqr; j++) {
-            if (i % j == 0) {
+//    private boolean isPrime(int i) {
+//        int sqr = i/2;
+//        for (int j = 2; j <= sqr; j++) {
+//            if (i % j == 0) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
+// count to the root of the number
+
+    private boolean isPrime(int number) {
+        int sqr = (int) Math.sqrt(number);
+        for (int i = 2; i <= sqr; i++) {
+            if (number % i == 0) {
                 return false;
             }
         }
