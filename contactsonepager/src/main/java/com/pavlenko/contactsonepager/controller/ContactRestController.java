@@ -47,8 +47,8 @@ public class ContactRestController {
     @GetMapping
     public List<ContactDto> getAll() {
         List<Contact> contacts = contactService.getAll();
-        return contacts.stream().map(value ->
-                new ContactDto(value.getId(), value.getName(), value.getLastName(), value.getAge()))
+        return contacts.stream().map(contact ->
+                new ContactDto(contact.getId(), contact.getName(), contact.getLastName(), contact.getAge()))
                 .collect(Collectors.toList());
     }
 
@@ -65,8 +65,12 @@ public class ContactRestController {
 
     @DeleteMapping("{id}")
     public ContactDto remove(@PathVariable int id) {
-        ContactDto contactDto = get(id);
-        contactService.remove(id);
-        return contactDto;
+        Contact contact = contactService.remove(id);
+        return new ContactDto(
+                contact.getId(),
+                contact.getName(),
+                contact.getLastName(),
+                contact.getAge()
+        );
     }
 }
