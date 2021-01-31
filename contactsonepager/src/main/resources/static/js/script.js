@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function main() {
 
 const REAL_CONTACT_CLASS = "real-contact";
 
+// класс обработки событий
 class FormController {
 
     constructor(contactClient, contactRenderer) {
@@ -30,10 +31,13 @@ class FormController {
         }
     }
 
+// функция по-умолчанию, которая обрабатывает событие
     handleEvent(event) {
         const action = event.target.dataset.action
         if (action !== undefined)
+            // передача эвента нужной функции
             this[action](event);
+        // this.add(event) - равнозначно
     }
 
     async add(event) {
@@ -44,6 +48,8 @@ class FormController {
             lastName: formDom.elements.lastName.value,
             age: formDom.elements.age.value,
         };
+
+        this.cleanForm(formDom);
 
         const response = await this.contactClient.add(contact);
         if (response.ok) {
@@ -58,6 +64,11 @@ class FormController {
 
     cancel(event) {
 
+    }
+
+    // очищаем поля ввода
+    cleanForm(formDom) {
+        formDom.elements.name.value = formDom.elements.lastName.value = formDom.elements.age.value = '';
     }
 }
 
