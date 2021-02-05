@@ -4,22 +4,48 @@ document.addEventListener("DOMContentLoaded", function main() {
     const contactWrapperDom = document.querySelector("#contact-wrapper");
 
     const contactClient = new ContactClient();
-    const contactRenderer = new ContactRenderer(contactTemplateDom, contactWrapperDom);
+    const htmlRenderer = new HtmlRenderer(contactTemplateDom, contactWrapperDom, formDom);
 
-    const formController = new FormController(contactClient, contactRenderer);
+    const formController = new FormController(contactClient, htmlRenderer);
+    const contactController = new ContactController(htmlRenderer);
 
 
     formDom.addEventListener("click", formController);
+    contactWrapperDom.addEventListener("click", contactController);
 });
 
 const REAL_CONTACT_CLASS = "real-contact";
 
-// класс обработки событий
+class ContactController {
+    constructor(htmlRenderer, contactClient) {
+        this.htmlRenderer = htmlRenderer;
+        this.contactClient = contactClient;
+    }
+
+    handleEvent(event) {
+        const action = event.target.dataset.action
+        if (action !== undefined)
+            this[action](event);
+    }
+
+    toggleDetails(event) {
+        this.htmlRenderer.toggleContactDetails(event);
+    }
+
+    edit(event) {
+        this.htmlRenderer.toEditForm(event);
+    }
+ // undefended
+     delete(event) {
+      this.contactClient.delete(event);
+    }
+}
+
 class FormController {
 
-    constructor(contactClient, contactRenderer) {
+    constructor(contactClient, htmlRenderer) {
         this.contactClient = contactClient;
-        this.contactRenderer = contactRenderer;
+        this.htmlRenderer = htmlRenderer;
         this._init();
     }
 
@@ -27,17 +53,15 @@ class FormController {
         const response = await this.contactClient.getAll();
         if (response.ok) {
             const contacts = await response.json();
-            this.contactRenderer.renderContacts(contacts);
+            this.htmlRenderer.renderContacts(contacts);
         }
     }
 
-// функция по-умолчанию, которая обрабатывает событие
     handleEvent(event) {
+        event.stopPropagation();
         const action = event.target.dataset.action
         if (action !== undefined)
-            // передача эвента нужной функции
             this[action](event);
-        // this.add(event) - равнозначно
     }
 
     async add(event) {
@@ -49,39 +73,66 @@ class FormController {
             age: formDom.elements.age.value,
         };
 
-        this.cleanForm(formDom);
-
         const response = await this.contactClient.add(contact);
         if (response.ok) {
             this._init();
+            this.htmlRenderer.clearForm();
         }
 
     }
 
-    edit(event) {
+    async edit(event) {
+        ////TODO complete. See method 'add'
+        const formDom = event.currentTarget;
 
+        const contact = {
+            id: formDom.elements.id.value,
+            name: formDom.elements.name.value,
+            lastName: formDom.elements.lastName.value,
+            age: formDom.elements.age.value,
+        };
+
+        const response = await this.contactClient.edit(contact);
+        if (response.ok) {
+            this._init();
+            this.htmlRenderer.clearForm();
+        }
     }
 
     cancel(event) {
-
+        this.htmlRenderer.toAddForm();
     }
 
-    // очищаем поля ввода
-    cleanForm(formDom) {
-        formDom.elements.name.value = formDom.elements.lastName.value = formDom.elements.age.value = '';
+    async delete(event) {
+        console.log(event.currentTarget.elements.value);
+        const id = event.currentTarget.elements.id.value;
+
+        const response = await this.contactClient.delete(id);
+        if (response.ok) {
+            this._init();
+        }
     }
+
+
+
 }
 
-class ContactRenderer {
+/**
+ * The responsibility of the class is render data and change HTML.
+ */
+class HtmlRenderer {
 
-    constructor(contactTemplateDom, contactWrapperDom) {
+    constructor(contactTemplateDom, contactWrapperDom, formDom) {
         this.contactTemplateDom = contactTemplateDom;
         this.contactWrapperDom = contactWrapperDom;
+        this.formDom = formDom;
+
+        this.addButtonDom = formDom.querySelector("#add-button");
+        this.editButtonDom = formDom.querySelector("#edit-button");
+        this.cancelButtonDom = formDom.querySelector("#cancel-button");
     }
 
     renderContacts(contacts) {
-
-        console.log("render");
         this.removeAll();
         for (let contact of contacts) {
             let contactDom = this.renderContact(contact);
@@ -111,6 +162,39 @@ class ContactRenderer {
         return res;
     }
 
+    clearForm() {
+        this.formDom.elements.name.value = null;
+        this.formDom.elements.lastName.value = null;
+        this.formDom.elements.age.value = null;
+    }
+
+    toggleContactDetails(event) {
+        const contactDetailsDom = event.target.closest(".real-contact").querySelector(".contact-details");
+        contactDetailsDom.classList.toggle("hide");
+    }
+
+    toEditForm(event) {
+        const contactDom = event.target.closest(`.${REAL_CONTACT_CLASS}`);
+        const contact = contactDom.contact;
+
+        this.formDom.elements.name.value = contact.name;
+        this.formDom.elements.lastName.value = contact.lastName;
+        this.formDom.elements.age.value = contact.age;
+        this.formDom.elements.id.value = contact.id;
+
+        this.addButtonDom.classList.add("hide");
+        this.editButtonDom.classList.remove("hide");
+        this.cancelButtonDom.classList.remove("hide");
+    }
+
+    toAddForm() {
+        this.clearForm()
+
+        this.editButtonDom.classList.add("hide");
+        this.cancelButtonDom.classList.add("hide");
+        this.addButtonDom.classList.remove("hide");
+    }
+
 }
 
 class ContactClient {
@@ -130,6 +214,31 @@ class ContactClient {
         return fetch(ContactClient.CONTACTS_PATH, {
             method: 'GET',
         });
-
     }
+
+    ////TODO add methods edit(contact) and remove(contact)
+
+    edit(contact) {
+
+        return fetch(ContactClient.CONTACTS_PATH, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contact)
+        });
+    }
+
+    delete(id) {
+        console.log('Delete ', id);
+        console.log(ContactClient.CONTACTS_PATH + `/${id}`);
+        return fetch(ContactClient.CONTACTS_PATH + `/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contact)
+        });
+    }
+
 }
