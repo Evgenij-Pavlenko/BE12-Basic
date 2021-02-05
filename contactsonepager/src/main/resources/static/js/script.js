@@ -41,6 +41,7 @@ class ContactController {
         console.log('ID: ', contactId);
 
         // ERROR: Uncaught TypeError: Cannot read property 'delete' of undefined
+         //Запутался с контроллерами и клиентами в JS
       this.contactClient.delete(contactId);
     }
 }
@@ -112,7 +113,7 @@ class FormController {
         console.log('FormDom: ', formDom);
         // const id = event.currentTarget.elements.id.value;
 
-        const response = await this.contactClient.delete(id);
+        const response = await this.contactClient.delete(event);
         if (response.ok) {
             this._init();
         }
