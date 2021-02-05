@@ -37,7 +37,11 @@ class ContactController {
     }
  // undefended
      delete(event) {
-      this.contactClient.delete(event);
+        const contactId = event.target.closest(`.${REAL_CONTACT_CLASS}`).contact.id;
+        console.log('ID: ', contactId);
+
+        // ERROR: Uncaught TypeError: Cannot read property 'delete' of undefined
+      this.contactClient.delete(contactId);
     }
 }
 
@@ -104,8 +108,9 @@ class FormController {
     }
 
     async delete(event) {
-        console.log(event.currentTarget.elements.value);
-        const id = event.currentTarget.elements.id.value;
+        const id = this.htmlRenderer.formDom.currentTarget.elements.id.value;
+        console.log('FormDom: ', formDom);
+        // const id = event.currentTarget.elements.id.value;
 
         const response = await this.contactClient.delete(id);
         if (response.ok) {
