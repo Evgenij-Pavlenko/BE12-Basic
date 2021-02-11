@@ -1,13 +1,13 @@
-package com.pavlenko.contactsonepager;
+package de.telran.contactsonepager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ContactsApplication {
+public class ContactsonepagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ContactsApplication.class, args);
+        SpringApplication.run(ContactsonepagerApplication.class, args);
     }
 
 }

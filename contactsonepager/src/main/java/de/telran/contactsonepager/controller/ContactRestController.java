@@ -1,13 +1,11 @@
-package com.pavlenko.contactsonepager.controller;
+package de.telran.contactsonepager.controller;
 
-import com.pavlenko.contactsonepager.dto.ContactDto;
-import com.pavlenko.contactsonepager.model.Contact;
-import com.pavlenko.contactsonepager.service.ContactService;
-import org.hibernate.mapping.Collection;
+import de.telran.contactsonepager.dto.ContactDto;
+import de.telran.contactsonepager.model.Contact;
+import de.telran.contactsonepager.service.ContactService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,10 +43,20 @@ public class ContactRestController {
     }
 
     @GetMapping
-    public List<ContactDto> getAll() {
-        List<Contact> contacts = contactService.getAll();
-        return contacts.stream().map(contact ->
-                new ContactDto(contact.getId(), contact.getName(), contact.getLastName(), contact.getAge()))
+    public List<ContactDto> getAll(@RequestParam(required = false) String name) {
+        List<Contact> contacts;
+        if (name == null)
+            contacts = contactService.getAll();
+        else
+            contacts = contactService.getAllByName(name);
+
+        return contacts.stream()
+                .map(contact -> new ContactDto(
+                        contact.getId(),
+                        contact.getName(),
+                        contact.getLastName(),
+                        contact.getAge()
+                ))
                 .collect(Collectors.toList());
     }
 

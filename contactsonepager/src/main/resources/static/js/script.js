@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", function main() {
     const htmlRenderer = new HtmlRenderer(contactTemplateDom, contactWrapperDom, formDom);
 
     const formController = new FormController(contactClient, htmlRenderer);
-    const contactController = new ContactController(htmlRenderer);
-
+    const contactController = new ContactController(htmlRenderer, contactClient);
 
     formDom.addEventListener("click", formController);
     contactWrapperDom.addEventListener("click", contactController);
@@ -32,17 +31,23 @@ class ContactController {
         this.htmlRenderer.toggleContactDetails(event);
     }
 
+    async remove(event) {
+        const contactDom = event.target.closest(".real-contact");
+        const contact = contactDom.contact;
+
+        const response = await this.contactClient.remove(contact);
+
+        if (response.ok) {
+            const response = await this.contactClient.getAll();
+            if (response.ok) {
+                const contacts = await response.json();
+                this.htmlRenderer.renderContacts(contacts);
+            }
+        }
+    }
+
     edit(event) {
         this.htmlRenderer.toEditForm(event);
-    }
- // undefended
-     delete(event) {
-        const contactId = event.target.closest(`.${REAL_CONTACT_CLASS}`).contact.id;
-        console.log('ID: ', contactId);
-
-        // ERROR: Uncaught TypeError: Cannot read property 'delete' of undefined
-         //Запутался с контроллерами и клиентами в JS
-      this.contactClient.delete(contactId);
     }
 }
 
@@ -87,7 +92,6 @@ class FormController {
     }
 
     async edit(event) {
-        ////TODO complete. See method 'add'
         const formDom = event.currentTarget;
 
         const contact = {
@@ -100,27 +104,14 @@ class FormController {
         const response = await this.contactClient.edit(contact);
         if (response.ok) {
             this._init();
-            this.htmlRenderer.clearForm();
+            this.htmlRenderer.toAddForm();
         }
+
     }
 
     cancel(event) {
         this.htmlRenderer.toAddForm();
     }
-
-    async delete(event) {
-        const id = this.htmlRenderer.formDom.currentTarget.elements.id.value;
-        console.log('FormDom: ', formDom);
-        // const id = event.currentTarget.elements.id.value;
-
-        const response = await this.contactClient.delete(event);
-        if (response.ok) {
-            this._init();
-        }
-    }
-
-
-
 }
 
 /**
@@ -180,7 +171,7 @@ class HtmlRenderer {
     }
 
     toEditForm(event) {
-        const contactDom = event.target.closest(`.${REAL_CONTACT_CLASS}`);
+        const contactDom = event.target.closest(".real-contact");
         const contact = contactDom.contact;
 
         this.formDom.elements.name.value = contact.name;
@@ -222,24 +213,15 @@ class ContactClient {
         });
     }
 
-    ////TODO add methods edit(contact) and remove(contact)
-
-    edit(contact) {
-
-        return fetch(ContactClient.CONTACTS_PATH, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(contact)
+    remove(contact) {
+        return fetch(ContactClient.CONTACTS_PATH + `/${contact.id}`, {
+            method: 'DELETE',
         });
     }
 
-    delete(id) {
-        console.log('Delete ', id);
-        console.log(ContactClient.CONTACTS_PATH + `/${id}`);
-        return fetch(ContactClient.CONTACTS_PATH + `/${id}`, {
-            method: 'DELETE',
+    edit(contact) {
+        return fetch(ContactClient.CONTACTS_PATH, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },

@@ -1,7 +1,7 @@
-package com.pavlenko.contactsonepager.service;
+package de.telran.contactsonepager.service;
 
-import com.pavlenko.contactsonepager.model.Contact;
-import com.pavlenko.contactsonepager.repository.ContactRepository;
+import de.telran.contactsonepager.model.Contact;
+import de.telran.contactsonepager.repository.ContactRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -44,11 +44,13 @@ public class ContactService {
     }
 
     public Contact remove(int id) {
-        Contact contact = get(id);
-        contactRepository.deleteById(id);
-//        contactRepository.delete(contact); // что быстрее или общепринято?
-        return contact;
+        Contact res = get(id);
+        contactRepository.delete(res);
+        return res;
     }
 
 
+    public List<Contact> getAllByName(String name) {
+        return contactRepository.findByNameIgnoreCase(name);
+    }
 }

@@ -1,4 +1,4 @@
-package com.pavlenko.contactsonepager.dto;
+package de.telran.contactsonepager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
