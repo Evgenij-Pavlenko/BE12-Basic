@@ -53,4 +53,8 @@ public class ContactService {
     public List<Contact> getAllByName(String name) {
         return contactRepository.findByNameIgnoreCase(name);
     }
+
+    public List<Contact> getAllByNameAndLastName(String name, String lastName) {
+        return contactRepository.findByNameAndLastNameIgnoreCase(name, lastName);
+    }
 }

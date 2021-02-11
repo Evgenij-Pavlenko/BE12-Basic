@@ -10,6 +10,8 @@ import java.util.List;
 public interface ContactRepository extends CrudRepository<Contact, Integer> {
     List<Contact> findByNameIgnoreCase(String name);
 
+    List<Contact> findByNameAndLastNameIgnoreCase(String name, String lastName);
+
     List<Contact> findAllByUser(User user);
 
     @Query("select c from Contact c join c.user u where u.email=?1")
