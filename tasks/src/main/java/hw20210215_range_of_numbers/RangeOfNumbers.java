@@ -25,4 +25,10 @@ public class RangeOfNumbers {
         }
         return false;
     }
+
+    // чуть дольше
+    private boolean isOneString(int num) {
+        String str = String.valueOf(num);
+        return str.contains("1");
+    }
 }
