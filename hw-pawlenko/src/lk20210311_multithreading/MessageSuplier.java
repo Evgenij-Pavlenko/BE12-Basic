@@ -14,7 +14,8 @@ public class MessageSuplier implements Runnable{
     public void run() {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))){
             String line;
-            while ((line = reader.readLine())!=null && true){
+            while ((line = reader.readLine())!=null && !line.equals("exit")){
+                queue.addFirst(line);
 
             }
         }catch (Exception ex){

@@ -3,7 +3,6 @@ package lk20210311_multithreading;
 public class SingleItemQueue {
     private String content;
     private final Object mutex = new Object();
-
     public void addFirst(String input) {
         synchronized (mutex) {
             content = input;
